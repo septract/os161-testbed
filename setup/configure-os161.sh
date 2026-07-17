@@ -53,7 +53,7 @@ if [ ! -f sys161.conf ]; then
 28	random	autoseed
 29	timer
 30	trace
-31	mainboard	ramsize=512K	cpus=1
+31	mainboard	ramsize=2M	cpus=1
 EOF
 fi
 
