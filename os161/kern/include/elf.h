@@ -186,6 +186,7 @@ typedef struct {
 #define	PT_PHDR		6		/* Entry for header table itself */
 #define	PT_NUM		7
 #define	PT_MIPS_REGINFO	0x70000000
+#define	PT_MIPS_ABIFLAGS 0x70000003	/* emitted by modern binutils */
 
 /* values for p_flags */
 #define	PF_R		0x4	/* Segment is readable */

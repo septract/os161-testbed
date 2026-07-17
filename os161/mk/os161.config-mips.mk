@@ -22,6 +22,23 @@ CFLAGS+=-mno-abicalls -fno-pic
 KCFLAGS+=-mno-abicalls -fno-pic
 
 #
+# The os161-patched toolchain disabled gp-relative small-data sections;
+# vanilla mips-elf gcc defaults to -G8, and nothing in the kernel (or in
+# thread startup) initializes $gp, so gp-relative loads fault. Force all
+# data out of .sdata/.sbss.
+#
+CFLAGS+=-G0
+KCFLAGS+=-G0
+
+#
+# OS/161's crt0 uses the MIPS-convention entry symbol __start; the old
+# os161-patched binutils knew that, vanilla ld defaults to _start and
+# needs it spelled out. (The kernel is covered by ENTRY(__start) in its
+# linker script.)
+#
+LDFLAGS+=-Wl,-e,__start
+
+#
 # Extra stuff required for the kernel.
 #
 # -ffixed-23 reserves register 23 (s7) to hold curthread. This register

@@ -315,7 +315,17 @@ MACHINE=mips
 # Compilation
 DEBUG=-O2
 WARNINGS=-Wall -W -Wwrite-strings -Wmissing-prototypes
-WERROR=-Werror
+# Warning families added to gcc after this code was written fire on the
+# baseline sources; keep them visible but non-fatal so -Werror still
+# catches everything else. (These names are all known to gcc >= 12; on a
+# host whose cc is clang, override HOST_WERROR in defs.mk -- see
+# setup/configure-os161.sh.)
+WERROR=-Werror \
+	-Wno-error=format-truncation -Wno-error=format-overflow \
+	-Wno-error=stringop-overflow -Wno-error=stringop-truncation \
+	-Wno-error=array-bounds -Wno-error=maybe-uninitialized \
+	-Wno-error=infinite-recursion -Wno-error=dangling-pointer \
+	-Wno-error=use-after-free
 
 #
 # Less-likely-to-need-setting
@@ -327,7 +337,11 @@ TOOLDIR=$(WORKDIR)/tooldir	# Place for host progs used in the build.
 INSTALLTOP=$(WORKDIR)/install	# Staging area for installation.
 
 # Platform.
-GNUTARGET=$(MACHINE)-harvard-os161
+# This tree is set up for a modern vanilla cross-toolchain (see setup/)
+# rather than the classic os161-patched one, which no longer builds on
+# current hosts. With the classic toolchain, set this back to
+# $(MACHINE)-harvard-os161 (in defs.mk).
+GNUTARGET=mips-unknown-elf
 
 # Programs and tools.
 CC=$(GNUTARGET)-gcc		# Compiler.

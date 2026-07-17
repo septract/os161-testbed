@@ -95,4 +95,11 @@ SECTIONS
 	/* These must appear regardless of  .  */
 	.gptab.sdata : { *(.gptab.data) *(.gptab.sdata) }
 	.gptab.sbss : { *(.gptab.bss) *(.gptab.sbss) }
+
+	/*
+	 * Modern binutils emits a .MIPS.abiflags section with its own
+	 * PT_MIPS_ABIFLAGS program header; System/161's boot loader
+	 * rejects unknown segment types, so discard it.
+	 */
+	/DISCARD/ : { *(.MIPS.abiflags) }
 }

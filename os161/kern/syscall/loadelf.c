@@ -236,6 +236,7 @@ load_elf(struct vnode *v, vaddr_t *entrypoint)
 		    case PT_NULL: /* skip */ continue;
 		    case PT_PHDR: /* skip */ continue;
 		    case PT_MIPS_REGINFO: /* skip */ continue;
+		    case PT_MIPS_ABIFLAGS: /* skip */ continue;
 		    case PT_LOAD: break;
 		    default:
 			kprintf("loadelf: unknown segment type %d\n",
@@ -281,6 +282,7 @@ load_elf(struct vnode *v, vaddr_t *entrypoint)
 		    case PT_NULL: /* skip */ continue;
 		    case PT_PHDR: /* skip */ continue;
 		    case PT_MIPS_REGINFO: /* skip */ continue;
+		    case PT_MIPS_ABIFLAGS: /* skip */ continue;
 		    case PT_LOAD: break;
 		    default:
 			kprintf("loadelf: unknown segment type %d\n",
