@@ -43,6 +43,10 @@ the attempt's inputs stay auditable.
   solutions either) reviews the diff and runs the acceptance tests in
   the exercise write-up, on 1 and 4 CPUs, several times — OS/161 bugs
   are frequently timing-dependent, and one green run proves little.
+- **Every** test named in the exercise's acceptance section must
+  actually be executed and its outcome recorded — no test may be
+  skipped as "covered by" another. An unrun listed test is a finding
+  in itself.
   `sys161`'s random seed (`root/sys161.conf`, slot 28) can be pinned
   for reproduction or varied for coverage.
 - Regressions count: every previously-passing test must still pass.

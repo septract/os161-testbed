@@ -3,6 +3,12 @@
 Draft prepared 2026-07-18 for submission to the System/161 maintainers
 (os161.org). Self-contained; the one-line patch is at the bottom.
 
+Where to send (per os161.org/bugs.html): "Bug reports should be sent
+to the author or via this silly web form" — the author is David A.
+Holland; the form is http://www.eecs.harvard.edu/~syrah/contact/.
+Notably, the bugs page currently states "As of System/161 2.0.8 there
+are no significant known bugs" — this report would amend that.
+
 ---
 
 **Subject:** sys161 2.0.8: heap buffer overflow in LAMEbus per-CPU CRAM
