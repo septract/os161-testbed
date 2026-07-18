@@ -35,6 +35,9 @@ HOST_CC=/Library/Developer/CommandLineTools/usr/bin/clang -isysroot /Library/Dev
 # host compiler) rejects the ones it doesn't know and has a couple of
 # its own warnings that fire on baseline host-tool code.
 HOST_WERROR=-Werror -Wno-error=gnu-folding-constant -Wno-error=uninitialized-const-pointer
+# Same reason: the /usr/bin ar/ranlib xcrun shims fail intermittently.
+HOST_AR=/Library/Developer/CommandLineTools/usr/bin/ar
+HOST_RANLIB=/Library/Developer/CommandLineTools/usr/bin/ranlib
 EOF
 fi
 

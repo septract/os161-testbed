@@ -372,7 +372,13 @@ HOST_WERROR=$(WERROR)
 # Probably-shouldn't-be-touched
 #
 
-CFLAGS=$(DEBUG) $(WARNINGS) $(WERROR) -std=gnu99
+# -fno-tree-loop-distribute-patterns: userland includes its own libc,
+# and without this, modern gcc's idiom recognition compiles libc's own
+# strlen loop into a call to strlen() -- infinite self-recursion. This
+# flag disables just that transformation; -fno-builtin would also work
+# but loses exit()'s noreturn-ness, breaking err.c under -Werror.
+# (The kernel is covered by -ffreestanding.)
+CFLAGS=$(DEBUG) $(WARNINGS) $(WERROR) -std=gnu99 -fno-tree-loop-distribute-patterns
 KCFLAGS=$(KDEBUG) $(WARNINGS) $(WERROR) -std=gnu99
 HOST_CFLAGS=$(HOST_DEBUG) $(HOST_WARNINGS) $(HOST_WERROR) \
 	-I$(INSTALLTOP)/hostinclude
