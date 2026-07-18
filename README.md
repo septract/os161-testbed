@@ -110,6 +110,17 @@ don't-move-the-goalposts rules, and the practical notes for driving
 the simulator. `CLAUDE.md` symlinks to it so Claude Code loads it
 automatically; point other tools at it however they take context.
 
+### Cost baseline
+
+The first full run (toolchain buildout + all three assignments solved
+and independently assessed + the simulator-bug diagnosis) cost about
+**$390 in API usage, 4.25 hours of API time, and a day of wall clock**
+— details and scope caveats in
+[notes/2026-07-18_usage_stats.md](notes/2026-07-18_usage_stats.md).
+It's one uncontrolled data point, recorded so future attempts have an
+anchor. If you run an attempt, please record your own stats the same
+way (dated note under `notes/`, with what the run included).
+
 ## Credits
 
 OS/161 and System/161 are by David A. Holland, Ada T. Lim, Margo I.

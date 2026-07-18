@@ -45,6 +45,12 @@ attempt is recoverable; a silent one is worthless.
   4 CPUs, more than once — OS/161 bugs are timing-dependent, and one
   green run proves little. Do not skip a listed test as "covered by"
   another.
+- At the end of an attempt, record the run's usage statistics in a
+  dated note under `notes/` (cost, API and wall durations, lines
+  changed, model mix, and what the run's scope included), alongside
+  the existing baseline in `notes/2026-07-18_usage_stats.md`. You
+  cannot see your own usage figures — ask your user to paste the
+  output of `/cost` (or their platform's equivalent).
 
 ## Practical notes for running the system
 
