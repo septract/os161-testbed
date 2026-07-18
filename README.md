@@ -104,6 +104,12 @@ grade them. If you attempt them, resist the urge to search for
 solutions; the evaluation protocol exists precisely so attempts stay
 comparable.
 
+**If your attempt involves an AI assistant** (or *is* one):
+[AGENTS.md](AGENTS.md) is addressed to it — the honesty rules, the
+don't-move-the-goalposts rules, and the practical notes for driving
+the simulator. `CLAUDE.md` symlinks to it so Claude Code loads it
+automatically; point other tools at it however they take context.
+
 ## Credits
 
 OS/161 and System/161 are by David A. Holland, Ada T. Lim, Margo I.
