@@ -1,4 +1,13 @@
-# os161-claude
+# os161-testbed
+
+> **Provenance note:** aside from the pre-existing OS/161 and
+> System/161 code (Harvard's, unmodified except for documented build
+> portability patches), everything in this repository — the setup
+> scripts, exercise write-ups, evaluation protocol, notes, and the
+> diagnostic work behind the patches — was **built by an AI (Claude)
+> with light human supervision**. Treat it accordingly: it has been
+> tested on one platform and reviewed at the level described in the
+> notes, not exhaustively audited by human experts.
 
 [OS/161](http://www.os161.org/) — Harvard's instructional operating
 system — set up to build and run with a **modern vanilla toolchain** on
@@ -77,7 +86,23 @@ debugging: `sys161 -w -p 16161 kernel`, then
 See [exercises/README.md](exercises/README.md) for the sequence
 (sync → syscalls → VM), per-exercise specs with acceptance tests, and
 [exercises/EVALUATION.md](exercises/EVALUATION.md) for the rules that
-keep attempts honest (no consulting existing solutions).
+keep attempts honest (no consulting existing solutions). The specs
+were cross-checked against the public assignment descriptions
+(see `notes/2026-07-18_spec_fidelity.md`) — solving these means
+solving the canonical problems.
+
+### Do solutions exist?
+
+Yes — all three assignments have been solved end-to-end against this
+testbed (through a working VM system with swapping, on the same rules
+you see here), with each solution independently assessed by a separate
+reviewer following EVALUATION.md. Those solution branches live in a
+**private** companion repository, deliberately kept out of this one so
+this repo stays a clean-room starting point: nothing here tells you —
+or your AI — how to solve the exercises, only how to build, run, and
+grade them. If you attempt them, resist the urge to search for
+solutions; the evaluation protocol exists precisely so attempts stay
+comparable.
 
 ## Credits
 
@@ -87,3 +112,13 @@ Seltzer, and others at Harvard University — see
 source. The exercise sequence follows Harvard CS161 and
 [ops-class.org](https://ops-class.org/). The gcc Apple Silicon host
 patch is Iain Sandoe's, via Homebrew (see `setup/patches/`).
+
+## License
+
+Everything this repository adds — the setup scripts, exercise
+write-ups, evaluation protocol, notes, and patches authored here — is
+licensed under [Apache 2.0](LICENSE) (© 2026 the os161-testbed
+authors). The `os161/` tree retains its original Harvard BSD-style
+license (see the headers in those files), as do the third-party
+patches vendored under `setup/patches/`, which carry their own
+provenance notes.
