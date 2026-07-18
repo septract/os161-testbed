@@ -47,6 +47,21 @@ the attempt's inputs stay auditable.
   for reproduction or varied for coverage.
 - Regressions count: every previously-passing test must still pass.
 
+## Checkpointing the review cycle
+
+The history must show the full evolution of each solution, not just the
+end state:
+
+1. Tag the exact state handed to the assessor as `asstN-submitted`.
+2. Commit the assessor's grading report verbatim under `assessments/`
+   (e.g. `assessments/asstN-report.md`) *before* applying any fixes,
+   so the causality is in-repo.
+3. Apply review follow-ups as separate commits whose messages cite the
+   findings they address. Never squash; dead ends stay in history.
+4. Tag the accepted post-fix state `asstN-done` — the base for the
+   next assignment. `git diff asstN-submitted..asstN-done` is then
+   exactly "what the review changed".
+
 ## Grading dimensions (per exercise)
 
 1. **Correctness**: acceptance tests pass repeatedly, both CPU counts.
