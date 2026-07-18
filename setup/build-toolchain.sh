@@ -91,6 +91,9 @@ if [ ! -x "$TOOLS/bin/sys161" ]; then
     rm -rf "sys161-$SYS161_V"
     tar -xzf "$DL/sys161-$SYS161_V.tar.gz"
     cd "sys161-$SYS161_V"
+    # CRAM heap-overflow fix; breaks cpus=2/3 boot on some hosts.
+    # See the patch header for the analysis.
+    patch -p1 < "$ROOT/setup/patches/sys161-$SYS161_V-cram-overflow.diff"
     ./configure --prefix="$TOOLS" mipseb
     make -j"$NJOBS"
     make install

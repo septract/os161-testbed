@@ -94,13 +94,59 @@ cd .../root && sys161 kernel      # boots; sys161.conf + LHD{0,1}.img created
   `MAKEINFO=true` to skip docs. Built clean first try; installed as
   `tools/bin/mips-unknown-elf-gdb`. Symbol loading + source listing from the
   kernel ELF verified.
-- **Remote debugging is blocked inside the CC sandbox**: sys161 cannot bind
-  either its unix debug socket or a TCP port (`-p`). To actually debug:
-  run `sys161 -w -p 16161 kernel` in a normal terminal (outside the
-  sandbox), then `mips-unknown-elf-gdb kernel` + `target remote :16161` —
-  or loosen the sandbox network policy via /sandbox.
+- **Remote debugging works** (verified 2026-07-17): `sys161 -w kernel`
+  creates `.sockets/gdb` in the working directory; attach with
+  `mips-unknown-elf-gdb kernel` + `target remote .sockets/gdb`
+  (symbols, registers, disassembly, per-CPU threads via
+  `info threads` all confirmed). Sandboxed build environments that
+  block `bind(2)` need the run done outside the sandbox (or with a
+  network-policy exception); this is a sandbox policy matter, not a
+  toolchain limitation.
 - build/ was deleted after the toolchain was done (2.3G reclaimed);
   re-creatable from downloads/ in ~20 min.
+
+## Console input needs a tty: use setup/interact161.py (2026-07-17)
+
+sys161 enables console *input* only when its stdin is a terminal.
+Piping input (`echo 31337 | sys161 ...`) silently never reaches the
+simulated console, which made interactive tests (sbrktest 18/21,
+malloctest 7, an interactive /bin/sh session) look unrunnable during
+ASST2 — that was misdiagnosed at the time as an environment
+limitation. The actual fix: `setup/interact161.py` runs sys161 on a
+pseudo-terminal and answers prompts from an expect/send list:
+
+    ../setup/interact161.py 300 'Enter random seed: ' '31337\n' -- \
+        ../tools/bin/sys161 -X kernel "p /testbin/sbrktest 18;q"
+
+(Sandboxed build environments may need to permit pty allocation —
+/dev/ptmx — for this to work.)
+
+## SOLVED: cpus=2/3 boot stall was a sys161 heap overflow (2026-07-17)
+
+The former "known environment quirk" (cpus=2 stalling at secondary-CPU
+bringup) is root-caused and fixed. It is a latent heap buffer overflow
+in System/161 2.0.8 itself: each CPU's CRAM scratch area is decoded as
+a 256-byte register window, and a starting secondary's boot stack
+points at the window's end, but the backing buffer is malloc'd at only
+LAMEBUS_CRAM_SIZE = 128 bytes — so the secondary's first stack pushes
+write ~24 bytes past the end of a 128-byte heap block. What that
+corrupts depends on the host allocator's layout, which is why the
+symptom was configuration-dependent (on macOS/arm64: cpus=2/3 zeroed
+the boot CPU's simulated $sp and wedged the machine in an exception
+storm; cpus=1/4 landed harmlessly — and on the x86/Linux hosts the
+course runs on, apparently harmlessly for years).
+
+Diagnosed with the project's own tooling, no guest-kernel changes:
+gdb attach over the debug socket (garbage $sp inside the LAMEbus CRAM
+window), `trace161 -tx` (first bad exception: boot CPU faulting with
+sp=0 right after the CPUE write), then instrumented sys161 builds that
+caught the corruption between two cycle boundaries and identified the
+overflowing store path.
+
+Fix: `setup/patches/sys161-2.0.8-cram-overflow.diff` (one line:
+CRAM_SIZE 128 -> 256), applied by setup/build-toolchain.sh. With it,
+cpus=2 and cpus=3 boot and run the full ASST1 battery cleanly; 1 and 4
+unchanged. Worth reporting upstream to os161.org.
 
 ## Disk footprint (project-local only)
 

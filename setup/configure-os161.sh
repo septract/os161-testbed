@@ -60,7 +60,9 @@ if [ ! -f sys161.conf ]; then
 EOF
 fi
 
-[ -f LHD0.img ] || disk161 create LHD0.img 5M
+# LHD0 doubles as the ASST3 swap disk; size it well past what the
+# tight-RAM paging tests (bigfork, parallelvm at 1-2MB RAM) commit.
+[ -f LHD0.img ] || disk161 create LHD0.img 32M
 [ -f LHD1.img ] || disk161 create LHD1.img 5M
 
 echo

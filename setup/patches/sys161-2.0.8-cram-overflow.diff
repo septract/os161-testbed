@@ -1,0 +1,31 @@
+Fix a heap buffer overflow in System/161 2.0.8 that breaks secondary-CPU
+startup depending on the host allocator's heap layout.
+
+Each CPU's "CRAM" scratch area is exposed to the guest as a 256-byte
+window of the bus controller's per-CPU region (LBC_CRAM_START 0x300 to
+LBC_CRAM_END 0x400, bus/lamebus.c), and set_cpue() points a starting
+secondary CPU's boot stack at the *end* of that window. But the backing
+heap buffer is allocated with LAMEBUS_CRAM_SIZE = 128, and
+lamebus_controller_{fetch,store}_cpu index it with offsets up to 255 —
+so the secondary's very first stack pushes (its 24-byte
+cpu_start_secondary frame, at window offsets 232..255) write past the
+end of a 128-byte malloc() block.
+
+What that corrupts depends on the host malloc's layout, which is why
+the symptom is configuration-dependent: on macOS/arm64 the adjacent
+allocation is the simulator's CPU register array, and booting with
+cpus=2 or cpus=3 zeroes the boot CPU's simulated $sp (the kernel wedges
+in an exception storm before "cpu1:" prints), while cpus=1 and cpus=4
+happen to land harmlessly. Diagnosed by instrumenting sys161; the
+guest kernel is not involved (reproduces with a pristine kernel).
+
+Fix: size the buffer to match the decoded window.
+
+--- a/bus/busdefs.h
++++ b/bus/busdefs.h
+@@ -36,4 +36,4 @@
+ /*
+  * Size of per-cpu scratch area
+  */
+-#define LAMEBUS_CRAM_SIZE            128
++#define LAMEBUS_CRAM_SIZE            256
